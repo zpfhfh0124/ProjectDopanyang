@@ -13,7 +13,7 @@ function CoinItem({ value, icon, label, digits }: { value: number; icon: string;
       >
         {value}
       </span>
-      <Image src={icon} alt="" width={22} height={22} className="size-[22px]" />
+      <Image src={icon} alt="" width={22} height={22} className="size-[22px]" loading="eager" />
     </span>
   );
 }
