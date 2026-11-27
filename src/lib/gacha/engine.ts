@@ -22,7 +22,46 @@ export type GachaState = {
   prizes: Prize[];
   /** 팩 id → 남은 수량과 재고 */
   packs: Record<number, PackState>;
+  /** 출석: 마지막 출석 날짜(YYYY-MM-DD)와 연속 일수 */
+  attendance?: { last: string; streak: number };
 };
+
+/** 회원 등급: 누적 뽑기 횟수 기준 (데모 기준값) */
+export const TIERS = [
+  { name: "Beginner", min: 0 },
+  { name: "Bronze", min: 50 },
+  { name: "Silver", min: 200 },
+  { name: "Gold", min: 500 },
+  { name: "Platinum", min: 1000 },
+] as const;
+
+export function tierOf(totalPulls: number) {
+  let i = 0;
+  while (i + 1 < TIERS.length && totalPulls >= TIERS[i + 1].min) i++;
+  const cur = TIERS[i];
+  const next = TIERS[i + 1];
+  return {
+    name: cur.name,
+    next: next?.name ?? null,
+    remaining: next ? next.min - totalPulls : 0,
+    progress: next ? (totalPulls - cur.min) / (next.min - cur.min) : 1,
+  };
+}
+
+/** 출석 보상: 매일 50브론즈(50원), 7일째마다 1실버(100원) 더 */
+export const CHECKIN_REWARD = 50;
+export const CHECKIN_WEEK_BONUS = 100;
+
+const dayDiff = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
+
+/** 오늘 출석. 이미 했으면 null. 하루 건너뛰면 연속 일수가 1부터 다시. */
+export function checkIn(state: GachaState, today: string): { state: GachaState; reward: number; streak: number } | null {
+  const a = state.attendance;
+  if (a?.last === today) return null;
+  const streak = a && dayDiff(a.last, today) === 1 ? (a.streak % 7) + 1 : 1;
+  const reward = CHECKIN_REWARD + (streak === 7 ? CHECKIN_WEEK_BONUS : 0);
+  return { state: { ...state, points: state.points + reward, attendance: { last: today, streak } }, reward, streak };
+}
 
 export const STARTING_POINTS = 5000;
 

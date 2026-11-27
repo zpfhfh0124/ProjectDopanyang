@@ -4,7 +4,13 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import type { Pack } from "@/data/packs";
 import { coinText, wonText } from "@/components/Coins";
 import { requestDraw } from "@/lib/gacha/api";
-import { initialState, restock, sell, type GachaState, type Prize } from "@/lib/gacha/engine";
+import { checkIn, initialState, restock, sell, type GachaState, type Prize } from "@/lib/gacha/engine";
+
+/** 이 기기 시간 기준 오늘 날짜 (YYYY-MM-DD) */
+export const todayString = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
 import DrawModal from "./DrawModal";
 import OddsModal from "./OddsModal";
 
@@ -22,6 +28,12 @@ type GachaContextValue = {
   restockPack: (pack: Pack) => void;
   /** 보관 카드를 코인으로 전환 */
   convertPrizes: (uids: number[]) => void;
+  /** 오늘 날짜 YYYY-MM-DD (화면이 뜨기 전엔 null) */
+  today: string | null;
+  /** 오늘 출석 (하루 한 번 코인 지급) */
+  doCheckIn: () => void;
+  /** 화면 아래 짧은 알림 */
+  notify: (msg: string) => void;
   resetAll: () => void;
 };
 
@@ -36,6 +48,7 @@ export function useGacha() {
 export default function GachaProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<GachaState>(initialState);
   const [loaded, setLoaded] = useState(false);
+  const [today, setToday] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [opening, setOpening] = useState<Opening | null>(null);
   const [oddsPack, setOddsPack] = useState<Pack | null>(null);
@@ -52,6 +65,8 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
       /* 저장값이 깨졌으면 처음 상태로 */
     }
     setLoaded(true);
+    // 오늘 날짜도 화면이 뜬 뒤에 읽는다 (미리 만든 페이지에 날짜가 굳지 않게)
+    setToday(todayString());
   }, []);
 
   useEffect(() => {
@@ -101,6 +116,14 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
       sellPrizes(uids);
       say(`${uids.length}장을 ${coinText(total)}로 전환했어요`);
     },
+    today,
+    doCheckIn: () => {
+      const res = checkIn(state, todayString());
+      if (!res) return say("오늘은 이미 출석했어요.");
+      setState(res.state);
+      say(`출석 ${res.streak}일째! ${coinText(res.reward)} 받았어요`);
+    },
+    notify: say,
     resetAll: () => setState(initialState()),
   };
 
