@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Pack } from "@/data/packs";
-import { coinText } from "@/components/Coins";
+import { coinText, wonText } from "@/components/Coins";
 import { requestDraw } from "@/lib/gacha/api";
 import { initialState, restock, sell, type GachaState, type Prize } from "@/lib/gacha/engine";
 import DrawModal from "./DrawModal";
@@ -90,7 +90,7 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
     showOdds: setOddsPack,
     charge: (amount) => {
       setState((s) => ({ ...s, points: s.points + amount }));
-      say(`${coinText(amount)} 충전했어요 (데모)`);
+      say(`${coinText(amount)}(${wonText(amount)}) 충전했어요 (데모)`);
     },
     restockPack: (pack) => setState((s) => restock(s, pack)),
     resetAll: () => setState(initialState()),

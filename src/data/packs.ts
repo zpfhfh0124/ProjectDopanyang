@@ -13,7 +13,7 @@ export type Pack = {
   id: number;
   category: string;
   name: string;
-  /** 1회 가격 (브론즈 단위). 100 = 1실버, 10,000 = 1골드 */
+  /** 1회 가격 (원 = 브론즈 단위). 100원 = 1실버, 10,000원 = 1골드 */
   price: number;
   total: number;
   themeColor: string;
@@ -23,7 +23,7 @@ export type Pack = {
   stock?: PerGrade;
   /** 확률 방식: 등급별 확률(%). */
   odds?: PerGrade;
-  /** 등급별 가치 (브론즈 단위, 100브론즈 = 1실버, 100실버 = 1골드). 없는 등급은 빠짐. */
+  /** 등급별 가치 (원 = 브론즈 단위, 100원 = 1실버, 10,000원 = 1골드). 없는 등급은 빠짐. */
   value: PerGrade;
   /** 직접 붙이는 필터 태그. 가격·방식·환원율 태그는 packTags()가 데이터로 계산해 더한다. */
   tags: string[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { CoinAmount } from "@/components/Coins";
+import { CoinAmount, wonText } from "@/components/Coins";
 import { GRADES, type Pack } from "@/data/packs";
 import { liveOdds, liveRtp, packState, type GachaState } from "@/lib/gacha/engine";
 import { GRADE_STYLE } from "./PrizeCard";
@@ -48,6 +48,7 @@ export default function OddsModal({ pack, state, onClose }: { pack: Pack; state:
                 </td>
                 <td className="py-2 text-right">
                   <CoinAmount amount={pack.value[g] ?? 0} size={13} className="justify-end" />
+                  <div className="text-[11px] text-[var(--muted)]">{wonText(pack.value[g] ?? 0)}</div>
                 </td>
               </tr>
             ))}

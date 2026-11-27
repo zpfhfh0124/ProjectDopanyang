@@ -38,7 +38,7 @@ export default function Header() {
       <button
         type="button"
         onClick={() => charge(1_000_000)}
-        title="데모: 누르면 100골드 충전"
+        title="데모: 누르면 100골드(1,000,000원) 충전"
         aria-label={`보유 재화 ${c.gold}골드 ${c.silver}실버 ${c.bronze}브론즈. 누르면 100골드 충전(데모)`}
         className="ml-auto flex shrink-0 items-center gap-[9px] self-start rounded-full pt-1 active:opacity-70"
       >

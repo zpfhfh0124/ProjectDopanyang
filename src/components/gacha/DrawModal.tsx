@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CoinAmount } from "@/components/Coins";
+import { CoinAmount, wonText } from "@/components/Coins";
 import { GRADES, type Pack } from "@/data/packs";
 import type { Prize } from "@/lib/gacha/engine";
 import PrizeCard, { GRADE_STYLE } from "./PrizeCard";
@@ -125,7 +125,14 @@ export default function DrawModal({
             <div className="mb-3 flex items-center justify-between text-[13px] text-[var(--muted)]">
               <span>받은 카드 가치 합계</span>
               <span className="text-[15px] font-bold text-[var(--text)]">
-                {allShown ? <CoinAmount amount={total} size={16} /> : "…"}
+                {allShown ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <CoinAmount amount={total} size={16} />
+                    <span className="text-[12px] font-normal text-[var(--muted)]">({wonText(total)})</span>
+                  </span>
+                ) : (
+                  "…"
+                )}
               </span>
             </div>
             <div className="flex h-11 gap-2">

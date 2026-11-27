@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { CoinAmount } from "@/components/Coins";
+import { CoinAmount, wonText } from "@/components/Coins";
 import type { Pack } from "@/data/packs";
 import { checkDraw, liveRtp, packState } from "@/lib/gacha/engine";
 import { useGacha } from "@/components/gacha/GachaProvider";
@@ -56,6 +56,7 @@ export default function PackCard({ pack }: { pack: Pack }) {
           left={
             <span className="inline-flex items-center gap-1">
               1회 <CoinAmount amount={pack.price} />
+              <span className="text-[12px]">({wonText(pack.price)})</span>
             </span>
           }
           right={`환원율 ${Math.round(liveRtp(state, pack))}%`}
