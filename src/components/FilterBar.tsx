@@ -42,25 +42,28 @@ function Chip({ label, on, onClick }: { label: string; on: boolean; onClick: () 
 /**
  * 탭 아래 필터 바: [필터 버튼] [가로로 미는 태그 칩들] | [정렬 선택]
  * 칩 줄은 스크롤바 없이 손가락이나 마우스로 끌어서 넘긴다.
- * 칩은 여러 개 켤 수 있고, 켠 태그를 모두 가진 팩만 남는다.
- * 필터 버튼을 누르면 칩 전체를 한눈에 보는 펼침 판이 열린다.
+ * 칩은 하나만 고를 수 있다. 고르면 줄에는 [필터 아이콘] [고른 칩 ×]만 남고,
+ * ×를 누르면 해제되어 칩 목록으로 돌아온다. 필터 버튼은 칩 전체를 보는 펼침 판을 연다.
  */
 export default function FilterBar({
   selected,
-  onToggle,
-  onReset,
+  onSelect,
   sort,
   onSort,
 }: {
-  selected: string[];
-  onToggle: (tag: string) => void;
-  onReset: () => void;
+  selected: string | null;
+  onSelect: (tag: string | null) => void;
   sort: SortId;
   onSort: (sort: SortId) => void;
 }) {
   const [open, setOpen] = useState(false);
   const chipRow = useDragScroll<HTMLDivElement>();
-  const count = selected.length;
+
+  // 같은 칩을 다시 누르면 해제, 다른 칩이면 그걸로 바꿈
+  const pick = (tag: string) => {
+    onSelect(selected === tag ? null : tag);
+    setOpen(false);
+  };
 
   return (
     <div className="border-t border-[var(--border)]">
@@ -68,26 +71,40 @@ export default function FilterBar({
         <button
           type="button"
           aria-expanded={open}
+          aria-label="필터 펼치기"
           onClick={() => setOpen((o) => !o)}
           className={`flex shrink-0 items-center gap-1 pl-4 pr-2 text-[13.5px] font-bold ${
-            count > 0 || open ? "text-[var(--tab-red)]" : "text-[var(--text)]"
+            open ? "text-[var(--tab-red)]" : "text-[var(--text)]"
           }`}
         >
           <SlidersIcon />
-          필터
-          {count > 0 && (
-            <span className="ml-0.5 flex size-[18px] items-center justify-center rounded-full bg-[var(--tab-red)] text-[11px] text-white">
-              {count}
-            </span>
-          )}
+          {!selected && "필터"}
         </button>
 
+        {selected && (
+          <div className="flex min-w-0 flex-1 items-center pr-3">
+            <button
+              type="button"
+              onClick={() => onSelect(null)}
+              aria-label={`${selected} 필터 해제`}
+              className="flex h-7 items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--surface)] pl-3 pr-2 text-[12.5px] font-semibold text-[var(--tab-red)]"
+            >
+              {selected}
+              <span aria-hidden className="text-[14px] leading-none text-[var(--muted)]">
+                ×
+              </span>
+            </button>
+          </div>
+        )}
+        {/* 칩 줄은 끌기 연결이 풀리지 않게 늘 두고, 고른 동안만 숨긴다 */}
         <div
           ref={chipRow}
-          className="no-scrollbar flex min-w-0 flex-1 cursor-grab select-none items-center gap-1.5 overflow-x-auto overscroll-x-contain pr-3"
+          className={`no-scrollbar min-w-0 flex-1 cursor-grab select-none items-center gap-1.5 overflow-x-auto overscroll-x-contain pr-3 ${
+            selected ? "hidden" : "flex"
+          }`}
         >
           {FILTER_TAGS.map((tag) => (
-            <Chip key={tag} label={tag} on={selected.includes(tag)} onClick={() => onToggle(tag)} />
+            <Chip key={tag} label={tag} on={false} onClick={() => pick(tag)} />
           ))}
         </div>
 
@@ -116,8 +133,11 @@ export default function FilterBar({
             <span className="text-[13px] font-bold text-[var(--text)]">태그로 거르기</span>
             <button
               type="button"
-              onClick={onReset}
-              disabled={count === 0}
+              onClick={() => {
+                onSelect(null);
+                setOpen(false);
+              }}
+              disabled={!selected}
               className="text-[12.5px] text-[var(--muted)] underline-offset-2 enabled:hover:underline disabled:opacity-40"
             >
               초기화
@@ -125,10 +145,9 @@ export default function FilterBar({
           </div>
           <div className="flex flex-wrap gap-1.5">
             {FILTER_TAGS.map((tag) => (
-              <Chip key={tag} label={tag} on={selected.includes(tag)} onClick={() => onToggle(tag)} />
+              <Chip key={tag} label={tag} on={selected === tag} onClick={() => pick(tag)} />
             ))}
           </div>
-          <p className="mt-2 text-[11.5px] text-[var(--muted)]">여러 개를 고르면 모두 해당하는 팩만 보여요.</p>
         </div>
       )}
     </div>
