@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useDragScroll } from "@/components/useDragScroll";
 import { FILTER_TAGS, SORTS, type SortId } from "@/data/packs";
 
 function SlidersIcon() {
@@ -40,6 +41,7 @@ function Chip({ label, on, onClick }: { label: string; on: boolean; onClick: () 
 
 /**
  * 탭 아래 필터 바: [필터 버튼] [가로로 미는 태그 칩들] | [정렬 선택]
+ * 칩 줄은 스크롤바 없이 손가락이나 마우스로 끌어서 넘긴다.
  * 칩은 여러 개 켤 수 있고, 켠 태그를 모두 가진 팩만 남는다.
  * 필터 버튼을 누르면 칩 전체를 한눈에 보는 펼침 판이 열린다.
  */
@@ -57,6 +59,7 @@ export default function FilterBar({
   onSort: (sort: SortId) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const chipRow = useDragScroll<HTMLDivElement>();
   const count = selected.length;
 
   return (
@@ -79,7 +82,10 @@ export default function FilterBar({
           )}
         </button>
 
-        <div className="no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pr-3">
+        <div
+          ref={chipRow}
+          className="no-scrollbar flex min-w-0 flex-1 cursor-grab select-none items-center gap-1.5 overflow-x-auto overscroll-x-contain pr-3"
+        >
           {FILTER_TAGS.map((tag) => (
             <Chip key={tag} label={tag} on={selected.includes(tag)} onClick={() => onToggle(tag)} />
           ))}

@@ -1,17 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
+  // Tailwind는 postcss.config.mjs(@tailwindcss/postcss)로 처리한다.
+  // 예전 turbopack 로더 방식은 globals.css를 고쳐도 반영되지 않아서 바꿨다.
 };
 
 export default nextConfig;
