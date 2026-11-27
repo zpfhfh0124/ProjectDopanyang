@@ -20,6 +20,8 @@ type GachaContextValue = {
   showOdds: (pack: Pack) => void;
   charge: (amount: number) => void;
   restockPack: (pack: Pack) => void;
+  /** 보관 카드를 코인으로 전환 */
+  convertPrizes: (uids: number[]) => void;
   resetAll: () => void;
 };
 
@@ -93,6 +95,12 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
       say(`${coinText(amount)}(${wonText(amount)}) 충전했어요 (데모)`);
     },
     restockPack: (pack) => setState((s) => restock(s, pack)),
+    convertPrizes: (uids) => {
+      const set = new Set(uids);
+      const total = state.prizes.filter((p) => set.has(p.uid)).reduce((s, p) => s + p.value, 0);
+      sellPrizes(uids);
+      say(`${uids.length}장을 ${coinText(total)}로 전환했어요`);
+    },
     resetAll: () => setState(initialState()),
   };
 
@@ -118,7 +126,7 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
       )}
       {oddsPack && <OddsModal pack={oddsPack} state={state} onClose={() => setOddsPack(null)} />}
       {toast && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[70] flex justify-center px-4">
+        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--bottom-nav-h)+16px+env(safe-area-inset-bottom))] z-[70] flex justify-center px-4">
           <div className="rounded-lg bg-[var(--text)]/92 px-4 py-2.5 text-[13px] font-semibold text-white shadow-lg">
             {toast}
           </div>
