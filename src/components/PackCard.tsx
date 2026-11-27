@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
+import { CoinAmount, wonText } from "@/components/Coins";
 import type { Pack } from "@/data/packs";
 import { checkDraw, liveRtp, packState } from "@/lib/gacha/engine";
 import { useGacha } from "@/components/gacha/GachaProvider";
@@ -50,7 +52,15 @@ export default function PackCard({ pack }: { pack: Pack }) {
             확률 보기
           </button>
         </div>
-        <Meta left={`1회 ${num(pack.price)}pt`} right={`환원율 ${Math.round(liveRtp(state, pack))}%`} />
+        <Meta
+          left={
+            <span className="inline-flex items-center gap-1">
+              1회 <CoinAmount amount={pack.price} />
+              <span className="text-[12px]">({wonText(pack.price)})</span>
+            </span>
+          }
+          right={`환원율 ${Math.round(liveRtp(state, pack))}%`}
+        />
         <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--border)]">
           <div className="h-full rounded-[3px] bg-[var(--accent)] transition-[width]" style={{ width: `${ratio * 100}%` }} />
         </div>
@@ -74,7 +84,7 @@ export default function PackCard({ pack }: { pack: Pack }) {
                   type="button"
                   disabled={busy}
                   onClick={() => startDraw(pack, b.count)}
-                  title={blocked === "SOLD_OUT" ? "남은 수량이 부족해요" : blocked ? "포인트가 부족해요" : undefined}
+                  title={blocked === "SOLD_OUT" ? "남은 수량이 부족해요" : blocked ? "코인이 부족해요" : undefined}
                   className={`flex-1 rounded-lg text-sm font-bold text-white active:brightness-90 ${b.className} ${
                     blocked ? "opacity-40" : ""
                   }`}
@@ -90,7 +100,7 @@ export default function PackCard({ pack }: { pack: Pack }) {
   );
 }
 
-function Meta({ left, right }: { left: string; right: string }) {
+function Meta({ left, right }: { left: ReactNode; right: ReactNode }) {
   return (
     <div className="flex h-5 items-center justify-between text-[13px] text-[var(--muted)]">
       <span>{left}</span>

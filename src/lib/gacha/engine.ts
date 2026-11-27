@@ -1,6 +1,6 @@
 // 추첨 규칙. Unity 프로토타입 GachaEngine.cs 와 같은 규칙이다.
 // 브라우저 API에 의존하지 않는 순수 함수라서, 출시 때 그대로 서버(API 라우트)로 옮기면 된다.
-// 지금은 데모라 브라우저에서 돌리지만, 출시 땐 포인트·재고·추첨을 반드시 서버가 정해야 한다.
+// 지금은 데모라 브라우저에서 돌리지만, 출시 땐 코인·재고·추첨을 반드시 서버가 정해야 한다.
 
 import { GRADES, oddsOf, rtp, type Grade, type Pack, type PerGrade } from "@/data/packs";
 
@@ -101,7 +101,7 @@ export function draw(state: GachaState, pack: Pack, count: number, random: () =>
   };
 }
 
-/** 카드들을 포인트로 전환한다 (보관함에서 빠짐). */
+/** 카드들을 코인으로 전환한다 (보관함에서 빠짐). */
 export function sell(state: GachaState, uids: number[]): GachaState {
   const set = new Set(uids);
   const gained = state.prizes.filter((p) => set.has(p.uid)).reduce((sum, p) => sum + p.value, 0);

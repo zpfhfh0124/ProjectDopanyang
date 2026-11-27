@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Pack } from "@/data/packs";
+import { coinText, wonText } from "@/components/Coins";
 import { requestDraw } from "@/lib/gacha/api";
 import { initialState, restock, sell, type GachaState, type Prize } from "@/lib/gacha/engine";
 import DrawModal from "./DrawModal";
@@ -68,7 +69,7 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
       try {
         const res = await requestDraw(state, pack.id, count);
         if (!res.ok) {
-          say(res.error === "SOLD_OUT" ? "남은 수량이 부족해요." : "포인트가 부족해요.");
+          say(res.error === "SOLD_OUT" ? "남은 수량이 부족해요." : "코인이 부족해요.");
           return;
         }
         setState(res.state);
@@ -89,7 +90,7 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
     showOdds: setOddsPack,
     charge: (amount) => {
       setState((s) => ({ ...s, points: s.points + amount }));
-      say(`${amount.toLocaleString("ko-KR")}pt 충전했어요 (데모)`);
+      say(`${coinText(amount)}(${wonText(amount)}) 충전했어요 (데모)`);
     },
     restockPack: (pack) => setState((s) => restock(s, pack)),
     resetAll: () => setState(initialState()),
@@ -107,7 +108,7 @@ export default function GachaProvider({ children }: { children: ReactNode }) {
             const total = opening.results.reduce((s, p) => s + p.value, 0);
             sellPrizes(opening.results.map((p) => p.uid));
             setOpening(null);
-            say(`${total.toLocaleString("ko-KR")}pt로 전환했어요`);
+            say(`${coinText(total)}로 전환했어요`);
           }}
           onKeep={() => {
             setOpening(null);
