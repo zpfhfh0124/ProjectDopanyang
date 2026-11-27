@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CoinAmount } from "@/components/Coins";
 import { GRADES, type Pack } from "@/data/packs";
 import type { Prize } from "@/lib/gacha/engine";
 import PrizeCard, { GRADE_STYLE } from "./PrizeCard";
 
-const num = (n: number) => n.toLocaleString("ko-KR");
 const PACK_MS = 1300; // 팩 흔들림 → 개봉까지
 
 /**
  * 개봉 연출과 결과 화면.
  * 1) 팩이 흔들리다 빛나며 열린다 (누르면 바로 열림)
  * 2) 카드가 한 장씩 뒤집힌다 (모두 열기로 건너뛰기). S상이 나오면 섬광
- * 3) 보관하기 / 포인트로 전환
+ * 3) 보관하기 / 코인으로 전환
  */
 export default function DrawModal({
   pack,
@@ -124,7 +124,9 @@ export default function DrawModal({
           <div className="border-t border-[var(--border)] px-4 pb-4 pt-3">
             <div className="mb-3 flex items-center justify-between text-[13px] text-[var(--muted)]">
               <span>받은 카드 가치 합계</span>
-              <span className="text-[15px] font-bold text-[var(--text)]">{allShown ? `${num(total)}pt` : "…"}</span>
+              <span className="text-[15px] font-bold text-[var(--text)]">
+                {allShown ? <CoinAmount amount={total} size={16} /> : "…"}
+              </span>
             </div>
             <div className="flex h-11 gap-2">
               <button
@@ -141,7 +143,7 @@ export default function DrawModal({
                 onClick={onConvert}
                 className="flex-1 rounded-lg bg-[var(--accent)] text-sm font-bold text-white disabled:opacity-40"
               >
-                포인트로 전환
+                코인으로 전환
               </button>
             </div>
           </div>

@@ -1,12 +1,13 @@
 "use client";
 
+import { CoinAmount } from "@/components/Coins";
 import { GRADES, type Pack } from "@/data/packs";
 import { liveOdds, liveRtp, packState, type GachaState } from "@/lib/gacha/engine";
 import { GRADE_STYLE } from "./PrizeCard";
 
 const num = (n: number) => n.toLocaleString("ko-KR");
 
-/** 확률표: 등급 / 확률(재고 방식은 남은 개수도) / 포인트 가치, 총 환원율 */
+/** 확률표: 등급 / 확률(재고 방식은 남은 개수도) / 코인 가치, 총 환원율 */
 export default function OddsModal({ pack, state, onClose }: { pack: Pack; state: GachaState; onClose: () => void }) {
   const odds = liveOdds(state, pack);
   const ps = packState(state, pack);
@@ -30,7 +31,7 @@ export default function OddsModal({ pack, state, onClose }: { pack: Pack; state:
             <tr className="border-b border-[var(--border)] text-left text-[var(--muted)]">
               <th className="py-1.5 font-semibold">등급</th>
               <th className="py-1.5 text-right font-semibold">확률</th>
-              <th className="py-1.5 text-right font-semibold">포인트 가치</th>
+              <th className="py-1.5 text-right font-semibold">가치</th>
             </tr>
           </thead>
           <tbody>
@@ -45,14 +46,16 @@ export default function OddsModal({ pack, state, onClose }: { pack: Pack; state:
                   {odds[g].toFixed(2)}%
                   {ps.stock && <span className="ml-1 text-[11.5px] text-[var(--muted)]">({num(ps.stock[g] ?? 0)}개)</span>}
                 </td>
-                <td className="py-2 text-right tabular-nums">{num(pack.value[g] ?? 0)}pt</td>
+                <td className="py-2 text-right">
+                  <CoinAmount amount={pack.value[g] ?? 0} size={13} className="justify-end" />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
         <div className="mt-3 text-[12.5px] text-[var(--muted)]">
-          총 환원율 {liveRtp(state, pack).toFixed(1)}% (서비스 내 포인트 기준) · 남은 수량 {num(ps.left)} / {num(pack.total)}
+          총 환원율 {liveRtp(state, pack).toFixed(1)}% (서비스 내 코인 기준) · 남은 수량 {num(ps.left)} / {num(pack.total)}
         </div>
         <button
           type="button"

@@ -13,6 +13,7 @@ export type Pack = {
   id: number;
   category: string;
   name: string;
+  /** 1회 가격 (브론즈 단위). 100 = 1실버, 10,000 = 1골드 */
   price: number;
   total: number;
   themeColor: string;
@@ -22,7 +23,7 @@ export type Pack = {
   stock?: PerGrade;
   /** 확률 방식: 등급별 확률(%). */
   odds?: PerGrade;
-  /** 등급별 포인트 가치. 없는 등급은 빠짐. */
+  /** 등급별 가치 (브론즈 단위, 100브론즈 = 1실버, 100실버 = 1골드). 없는 등급은 빠짐. */
   value: PerGrade;
   /** 직접 붙이는 필터 태그. 가격·방식·환원율 태그는 packTags()가 데이터로 계산해 더한다. */
   tags: string[];
@@ -94,7 +95,7 @@ export function oddsOf(pack: Pack, stock: PerGrade | undefined = pack.stock): Re
   return result;
 }
 
-/** 환원율(%) = 등급별 (확률 × 포인트 가치) 합 ÷ 1회 가격 */
+/** 환원율(%) = 등급별 (확률 × 가치) 합 ÷ 1회 가격 */
 export function rtp(pack: Pack, stock?: PerGrade): number {
   const odds = oddsOf(pack, stock ?? pack.stock);
   const expected = GRADES.reduce((sum, g) => sum + (odds[g] / 100) * (pack.value[g] ?? 0), 0);
@@ -106,8 +107,8 @@ export const FILTER_TAGS = [
   "신규",
   "이벤트",
   "환원율 95%↑",
-  "1천pt 이하",
-  "10만pt 이상",
+  "10실버 이하",
+  "10골드 이상",
   "소량 한정",
   "재고 방식",
   "확률 방식",
@@ -117,8 +118,8 @@ export const FILTER_TAGS = [
 export function packTags(pack: Pack): string[] {
   const tags = [...pack.tags];
   if (rtp(pack) >= 95) tags.push("환원율 95%↑");
-  if (pack.price <= 1000) tags.push("1천pt 이하");
-  if (pack.price >= 100000) tags.push("10만pt 이상");
+  if (pack.price <= 1000) tags.push("10실버 이하");
+  if (pack.price >= 100000) tags.push("10골드 이상");
   tags.push(pack.stock ? "재고 방식" : "확률 방식");
   return tags;
 }

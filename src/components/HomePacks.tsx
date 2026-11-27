@@ -13,7 +13,7 @@ export default function HomePacks() {
   const [selected, setSelected] = useState<string[]>([]);
   const [sort, setSort] = useState<SortId>("recommended");
 
-  const { state, charge } = useGacha();
+  const { state } = useGacha();
 
   const packs = useMemo(() => {
     const filtered = PACKS.filter((p) => {
@@ -42,23 +42,8 @@ export default function HomePacks() {
 
       <p className="flex gap-1 px-4 pt-2.5 text-[11.5px] leading-snug text-[var(--muted)]">
         <span aria-hidden className="text-[var(--tab-red)]">ⓘ</span>
-        환원율과 등급 가치는 이 서비스 안의 포인트(pt) 기준이에요. 실제 카드 거래 시세와 같다는 보장은 없어요.
+        환원율과 등급 가치는 이 서비스 안의 코인 기준이에요. 실제 카드 거래 시세와 같다는 보장은 없어요.
       </p>
-
-      {/* 보유 포인트 (데모: 충전 버튼으로 늘릴 수 있음) */}
-      <div className="mx-4 mt-2.5 flex items-center justify-between rounded-[10px] border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2">
-        <div className="text-[13px] text-[var(--muted)]">
-          보유 <span className="text-[15px] font-bold tabular-nums text-[var(--text)]">{state.points.toLocaleString("ko-KR")}</span>pt
-          <span className="ml-2 text-[12px]">보관 카드 {state.prizes.length}장</span>
-        </div>
-        <button
-          type="button"
-          onClick={() => charge(1000000)}
-          className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-[12px] font-semibold text-[var(--accent)]"
-        >
-          +100만pt 충전(데모)
-        </button>
-      </div>
 
       <section className="flex flex-col gap-3.5 px-4 pb-4 pt-3" aria-label="팩 목록">
         {packs.map((p) => (

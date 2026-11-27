@@ -1,3 +1,4 @@
+import { CoinAmount } from "@/components/Coins";
 import type { Grade } from "@/data/packs";
 
 /** 등급별 카드 색 (Unity 프로토타입과 같은 색) */
@@ -8,8 +9,6 @@ export const GRADE_STYLE: Record<Grade, string> = {
   C: "#7d869c",
   D: "#7d869c",
 };
-
-const num = (n: number) => n.toLocaleString("ko-KR");
 
 /**
  * 결과 카드 한 장. revealed 가 false면 뒷면, true가 되면 뒤집혀 앞면이 보인다.
@@ -54,7 +53,7 @@ export default function PrizeCard({
                 {grade}상
               </div>
               <div className={`relative font-semibold opacity-90 ${size === "lg" ? "mt-3 text-sm" : "mt-0.5 text-[9px]"}`}>
-                {num(value)}pt
+                <CoinAmount amount={value} size={size === "lg" ? 14 : 9} className={size === "lg" ? "gap-1" : "gap-0.5"} />
               </div>
             </>
           )}

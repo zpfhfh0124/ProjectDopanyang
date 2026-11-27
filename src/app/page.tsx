@@ -3,9 +3,6 @@ import GachaProvider from "@/components/gacha/GachaProvider";
 import Header from "@/components/Header";
 import HomePacks from "@/components/HomePacks";
 
-// 아직 코인을 얻는 방법이 없어서 보여 주기용 값
-const DEMO_COINS = { gold: 12500, silver: 36, bronze: 8 };
-
 // 배너 그림이 생기기 전까지 쓰는 임시 배너
 const BANNERS = [
   { bg: "linear-gradient(135deg, #c9d3f5, #9fb2f0)", title: "도파냥 오픈", sub: "첫 뽑기를 시작해 보세요" },
@@ -15,30 +12,31 @@ const BANNERS = [
 
 export default function Home() {
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-[480px] bg-[var(--bg)]">
-      {/* 타이틀: 스크롤해도 맨 위 */}
-      <header className="sticky top-0 z-20 h-[var(--header-h)] bg-[var(--bg)] px-4 pt-3">
-        <Header coins={DEMO_COINS} />
-      </header>
+    <GachaProvider>
+      <main className="mx-auto min-h-dvh w-full max-w-[480px] bg-[var(--bg)]">
+        {/* 타이틀: 스크롤해도 맨 위. 오른쪽 위 코인이 보유 재화 */}
+        <header className="sticky top-0 z-20 h-[var(--header-h)] bg-[var(--bg)] px-4 pt-3">
+          <Header />
+        </header>
 
-      <section className="pt-1.5" aria-label="배너">
-        <BannerCarousel
-          slides={BANNERS.map((b) => (
-            <div key={b.title} className="flex h-full flex-col justify-center px-6" style={{ background: b.bg }}>
-              <div className="text-xl font-extrabold text-[var(--text)]">{b.title}</div>
-              <div className="mt-1 text-[13px] text-[var(--text)]/70">{b.sub}</div>
-            </div>
-          ))}
-        />
-      </section>
+        <section className="pt-1.5" aria-label="배너">
+          <BannerCarousel
+            slides={BANNERS.map((b) => (
+              <div key={b.title} className="flex h-full flex-col justify-center px-6" style={{ background: b.bg }}>
+                <div className="text-xl font-extrabold text-[var(--text)]">{b.title}</div>
+                <div className="mt-1 text-[13px] text-[var(--text)]/70">{b.sub}</div>
+              </div>
+            ))}
+          />
+        </section>
 
-      <GachaProvider>
         <HomePacks />
-      </GachaProvider>
 
-      <p className="border-t border-[var(--border)] px-4 pb-8 pt-3 text-[12px] text-[var(--muted)]">
-        데모예요. 실제 결제와 배송은 없고, 포인트와 뽑은 카드는 이 브라우저에만 저장되는 가짜 데이터예요.
-      </p>
-    </main>
+        <p className="border-t border-[var(--border)] px-4 pb-8 pt-3 text-[12px] text-[var(--muted)]">
+          데모예요. 실제 결제와 배송은 없고, 코인과 뽑은 카드는 이 브라우저에만 저장되는 가짜 데이터예요. 오른쪽 위
+          코인을 누르면 100골드가 충전돼요.
+        </p>
+      </main>
+    </GachaProvider>
   );
 }
