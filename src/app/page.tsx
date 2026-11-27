@@ -1,8 +1,6 @@
 import BannerCarousel from "@/components/BannerCarousel";
-import CategoryTabs from "@/components/CategoryTabs";
 import Header from "@/components/Header";
-import PackCard from "@/components/PackCard";
-import { CATEGORIES, PACKS } from "@/data/packs";
+import HomePacks from "@/components/HomePacks";
 
 // 아직 코인을 얻는 방법이 없어서 보여 주기용 값
 const DEMO_COINS = { gold: 12500, silver: 36, bronze: 8 };
@@ -33,23 +31,11 @@ export default function Home() {
         />
       </section>
 
-      {/* 구분선 두 줄 사이 탭 바: 올라오다가 타이틀 바로 밑에 붙음 */}
-      <nav
-        className="sticky top-[var(--header-h)] z-10 mt-3.5 border-y border-[var(--border)] bg-[var(--bg)]"
-        aria-label="카테고리"
-      >
-        <CategoryTabs tabs={CATEGORIES} />
-      </nav>
+      <HomePacks />
 
-      <p className="border-b border-[var(--border)] bg-[var(--bg)] px-4 py-2.5 text-[13px] text-[var(--muted)]">
+      <p className="border-t border-[var(--border)] px-4 pb-8 pt-3 text-[12px] text-[var(--muted)]">
         UI 프로토타입이에요. 실제 결제, 뽑기, 배송은 없고 포인트와 카드는 모두 가짜 데이터예요.
       </p>
-
-      <section className="flex flex-col gap-3.5 px-4 pb-6 pt-3.5" aria-label="팩 목록">
-        {PACKS.map((p) => (
-          <PackCard key={p.id} pack={p} />
-        ))}
-      </section>
     </main>
   );
 }
