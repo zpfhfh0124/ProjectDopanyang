@@ -1,69 +1,55 @@
-import Image from "next/image";
+import BannerCarousel from "@/components/BannerCarousel";
+import CategoryTabs from "@/components/CategoryTabs";
+import Header from "@/components/Header";
+import PackCard from "@/components/PackCard";
+import { CATEGORIES, PACKS } from "@/data/packs";
+
+// 아직 코인을 얻는 방법이 없어서 보여 주기용 값
+const DEMO_COINS = { gold: 12500, silver: 36, bronze: 8 };
+
+// 배너 그림이 생기기 전까지 쓰는 임시 배너
+const BANNERS = [
+  { bg: "linear-gradient(135deg, #c9d3f5, #9fb2f0)", title: "도파냥 오픈", sub: "첫 뽑기를 시작해 보세요" },
+  { bg: "linear-gradient(135deg, #f5cde0, #ef9fc4)", title: "매일 출석 코인", sub: "하루 한 번 브론즈 코인 지급" },
+  { bg: "linear-gradient(135deg, #cdeedd, #8fd8b4)", title: "신규 팩 입고", sub: "이번 주 새로 들어온 팩" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="mx-auto min-h-dvh w-full max-w-[480px] bg-[var(--bg)]">
+      {/* 타이틀: 스크롤해도 맨 위 */}
+      <header className="sticky top-0 z-20 h-[var(--header-h)] bg-[var(--bg)] px-4 pt-3">
+        <Header coins={DEMO_COINS} />
+      </header>
+
+      <section className="pt-1.5" aria-label="배너">
+        <BannerCarousel
+          slides={BANNERS.map((b) => (
+            <div key={b.title} className="flex h-full flex-col justify-center px-6" style={{ background: b.bg }}>
+              <div className="text-xl font-extrabold text-[var(--text)]">{b.title}</div>
+              <div className="mt-1 text-[13px] text-[var(--text)]/70">{b.sub}</div>
+            </div>
+          ))}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      {/* 구분선 두 줄 사이 탭 바: 올라오다가 타이틀 바로 밑에 붙음 */}
+      <nav
+        className="sticky top-[var(--header-h)] z-10 mt-3.5 border-y border-[var(--border)] bg-[var(--bg)]"
+        aria-label="카테고리"
+      >
+        <CategoryTabs tabs={CATEGORIES} />
+      </nav>
+
+      <p className="border-b border-[var(--border)] bg-[var(--bg)] px-4 py-2.5 text-[13px] text-[var(--muted)]">
+        UI 프로토타입이에요. 실제 결제, 뽑기, 배송은 없고 포인트와 카드는 모두 가짜 데이터예요.
+      </p>
+
+      <section className="flex flex-col gap-3.5 px-4 pb-6 pt-3.5" aria-label="팩 목록">
+        {PACKS.map((p) => (
+          <PackCard key={p.id} pack={p} />
+        ))}
+      </section>
+    </main>
   );
 }
