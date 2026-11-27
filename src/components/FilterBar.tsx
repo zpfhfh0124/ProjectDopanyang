@@ -96,7 +96,7 @@ export default function FilterBar({
             value={sort}
             onChange={(e) => onSort(e.target.value as SortId)}
             aria-label="정렬"
-            className="h-full max-w-[128px] cursor-pointer appearance-none [field-sizing:content] bg-transparent pl-3 pr-7 text-[13px] font-bold text-[var(--text)] outline-none"
+            className="h-full w-[5.6rem] cursor-pointer appearance-none bg-transparent pl-2.5 pr-6 text-[13px] font-bold text-[var(--text)] outline-none"
           >
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
@@ -104,7 +104,7 @@ export default function FilterBar({
               </option>
             ))}
           </select>
-          <span className="pointer-events-none absolute right-3 text-[var(--text)]">
+          <span className="pointer-events-none absolute right-2.5 text-[var(--text)]">
             <UpDownIcon />
           </span>
         </div>

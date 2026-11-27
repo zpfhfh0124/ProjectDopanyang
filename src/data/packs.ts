@@ -120,10 +120,11 @@ export function packTags(pack: Pack): string[] {
 
 export const SORTS = [
   { id: "recommended", label: "추천순" },
-  { id: "price-asc", label: "낮은 가격순" },
-  { id: "price-desc", label: "높은 가격순" },
-  { id: "rtp-desc", label: "환원율 높은순" },
-  { id: "left-asc", label: "남은 수량 적은순" },
+  // 정렬 칸 폭이 4글자 기준이라 이름은 4글자 이내로
+  { id: "price-asc", label: "저가순" },
+  { id: "price-desc", label: "고가순" },
+  { id: "rtp-desc", label: "환원율순" },
+  { id: "left-asc", label: "잔여순" },
 ] as const;
 
 export type SortId = (typeof SORTS)[number]["id"];
