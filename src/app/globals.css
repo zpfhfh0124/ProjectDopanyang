@@ -22,6 +22,53 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 뽑기 연출 */
+@keyframes gacha-shake {
+  0%, 100% { transform: rotate(0) scale(1); }
+  15% { transform: rotate(-4deg) scale(1.02); }
+  30% { transform: rotate(4deg) scale(1.03); }
+  45% { transform: rotate(-6deg) scale(1.05); }
+  60% { transform: rotate(6deg) scale(1.07); }
+  75% { transform: rotate(-3deg) scale(1.1); filter: brightness(1.3); }
+  90% { transform: scale(1.18); filter: brightness(2.2); opacity: 1; }
+}
+.gacha-pack-shake {
+  animation: gacha-shake 1.3s ease-in forwards;
+}
+@keyframes gacha-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.gacha-pop {
+  animation: gacha-pop 0.22s ease-out;
+}
+@keyframes gacha-flash {
+  from { opacity: 0.85; }
+  to { opacity: 0; }
+}
+.gacha-flash {
+  animation: gacha-flash 0.7s ease-out forwards;
+}
+@keyframes gacha-glow {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(255, 196, 0, 0.55); }
+  50% { box-shadow: 0 0 16px 4px rgba(255, 120, 180, 0.75); }
+}
+.gacha-s-glow {
+  animation: gacha-glow 1.4s ease-in-out infinite;
+}
+@keyframes gacha-shine {
+  from { transform: translateX(-120%) skewX(-20deg); }
+  to { transform: translateX(220%) skewX(-20deg); }
+}
+.gacha-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: gacha-shine 1.8s ease-in-out infinite;
+}
+
 /* 가로로 넘기는 줄: 스크롤바는 숨기고 끌어서 넘긴다 */
 .no-scrollbar {
   scrollbar-width: none;
