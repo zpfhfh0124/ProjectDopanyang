@@ -22,6 +22,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 가로로 넘기는 줄: 스크롤바는 숨기고 끌어서 넘긴다 */
 .no-scrollbar {
   scrollbar-width: none;
 }

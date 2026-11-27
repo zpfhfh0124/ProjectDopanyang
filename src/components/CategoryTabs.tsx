@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useDragScroll } from "@/components/useDragScroll";
 
 /**
- * 카테고리 탭 바. 넘치면 가로로 밀고, 누르면 굵은 글자 + 빨간 밑줄로 선택된다.
+ * 카테고리 탭 바. 넘치면 스크롤바 없이 끌어서 넘기고, 누르면 굵은 글자 + 빨간 밑줄로 선택된다.
  * 아직 팩 거르기는 없고 선택 상태만 바뀐다 (onSelect로 받을 수 있음).
  */
 export default function CategoryTabs({
@@ -17,6 +18,7 @@ export default function CategoryTabs({
 }) {
   const [selected, setSelected] = useState(initial);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const row = useDragScroll<HTMLDivElement>();
 
   const select = (i: number) => {
     setSelected(i);
@@ -25,7 +27,11 @@ export default function CategoryTabs({
   };
 
   return (
-    <div className="no-scrollbar flex h-11 overflow-x-auto px-1.5" role="tablist">
+    <div
+      ref={row}
+      className="no-scrollbar flex h-11 cursor-grab select-none overflow-x-auto overscroll-x-contain px-1.5"
+      role="tablist"
+    >
       {tabs.map((name, i) => {
         const on = i === selected;
         return (
