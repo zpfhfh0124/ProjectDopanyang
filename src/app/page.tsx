@@ -1,4 +1,5 @@
 import BannerCarousel from "@/components/BannerCarousel";
+import GachaProvider from "@/components/gacha/GachaProvider";
 import Header from "@/components/Header";
 import HomePacks from "@/components/HomePacks";
 
@@ -31,10 +32,12 @@ export default function Home() {
         />
       </section>
 
-      <HomePacks />
+      <GachaProvider>
+        <HomePacks />
+      </GachaProvider>
 
       <p className="border-t border-[var(--border)] px-4 pb-8 pt-3 text-[12px] text-[var(--muted)]">
-        UI 프로토타입이에요. 실제 결제, 뽑기, 배송은 없고 포인트와 카드는 모두 가짜 데이터예요.
+        데모예요. 실제 결제와 배송은 없고, 포인트와 뽑은 카드는 이 브라우저에만 저장되는 가짜 데이터예요.
       </p>
     </main>
   );
