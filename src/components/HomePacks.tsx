@@ -10,24 +10,18 @@ import { liveRtp, packState } from "@/lib/gacha/engine";
 
 /** 탭 줄 + 필터 바(타이틀 밑에 고정), 안내 한 줄, 걸러지고 정렬된 팩 목록 */
 export default function HomePacks() {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
   const [sort, setSort] = useState<SortId>("recommended");
 
   const { state } = useGacha();
 
   const packs = useMemo(() => {
-    const filtered = PACKS.filter((p) => {
-      const tags = packTags(p);
-      return selected.every((t) => tags.includes(t));
-    });
+    const filtered = selected ? PACKS.filter((p) => packTags(p).includes(selected)) : PACKS;
     return sortPacks(filtered, sort, (p) => ({
       rtp: liveRtp(state, p),
       leftRatio: packState(state, p).left / p.total,
     }));
   }, [selected, sort, state]);
-
-  const toggle = (tag: string) =>
-    setSelected((s) => (s.includes(tag) ? s.filter((t) => t !== tag) : [...s, tag]));
 
   return (
     <>
@@ -37,7 +31,7 @@ export default function HomePacks() {
         aria-label="카테고리와 필터"
       >
         <CategoryTabs tabs={CATEGORIES} />
-        <FilterBar selected={selected} onToggle={toggle} onReset={() => setSelected([])} sort={sort} onSort={setSort} />
+        <FilterBar selected={selected} onSelect={setSelected} sort={sort} onSort={setSort} />
       </nav>
 
       <p className="flex gap-1 px-4 pt-2.5 text-[11.5px] leading-snug text-[var(--muted)]">
@@ -54,7 +48,7 @@ export default function HomePacks() {
             조건에 맞는 팩이 없어요.
             <button
               type="button"
-              onClick={() => setSelected([])}
+              onClick={() => setSelected(null)}
               className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 font-semibold text-[var(--text)]"
             >
               필터 초기화
