@@ -2,7 +2,7 @@ import { rtp, type Pack } from "@/data/packs";
 
 const num = (n: number) => n.toLocaleString("ko-KR");
 
-/** 팩 카드: 그림 자리, 이름, 1회 가격, 환원율, 남은 수량 막대, 1회/10회/확률 버튼. */
+/** 팩 카드: 그림 자리, 이름과 확률 보기, 1회 가격, 환원율, 남은 수량 막대, 1회/10회/100회 버튼. */
 export default function PackCard({ pack }: { pack: Pack }) {
   const ratio = pack.total > 0 ? pack.left / pack.total : 0;
 
@@ -29,7 +29,11 @@ export default function PackCard({ pack }: { pack: Pack }) {
       </div>
 
       <div className="flex flex-col gap-2 px-3.5 py-3">
-        <h3 className="text-base font-bold leading-[26px] text-[var(--text)]">{pack.name}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-bold leading-[26px] text-[var(--text)]">{pack.name}</h3>
+          {/* 확률 보기: 버튼 줄에서 빠지고 이름 옆 작은 글자로 옮김 (확률표 창은 다음 단계) */}
+          <button className="text-[12.5px] text-[var(--muted)] underline underline-offset-2">확률 보기</button>
+        </div>
         <Meta left={`1회 ${num(pack.price)}pt`} right={`환원율 ${Math.round(rtp(pack))}%`} />
         <div className="h-1.5 overflow-hidden rounded-[3px] bg-[var(--border)]">
           <div className="h-full rounded-[3px] bg-[var(--accent)]" style={{ width: `${ratio * 100}%` }} />
@@ -42,8 +46,8 @@ export default function PackCard({ pack }: { pack: Pack }) {
           <button className="flex-1 rounded-lg bg-[var(--accent)] text-sm font-bold text-white active:brightness-90">
             10회
           </button>
-          <button className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm font-bold text-[var(--text)] active:bg-[var(--bg)]">
-            확률
+          <button className="flex-1 rounded-lg bg-[#111111] text-sm font-bold text-white active:brightness-125">
+            100회
           </button>
         </div>
       </div>
