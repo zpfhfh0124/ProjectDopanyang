@@ -139,7 +139,7 @@ export default function MyPage() {
         <MenuRow href="/prizes" label="당첨 내역" hint={`보관 카드 ${state.prizes.length}장 · 누적 뽑기 ${state.totalPulls.toLocaleString("ko-KR")}회`} />
         <MenuRow onClick={soon("RUSH 티켓")} label="RUSH 티켓" hint="0장" />
         <MenuRow onClick={soon("쿠폰")} label="쿠폰" hint="0장" />
-        <MenuRow onClick={soon("배송지 주소 변경")} label="배송지 주소 변경" hint="실물 카드를 받을 주소" />
+        <MenuRow onClick={soon("배송지 주소 설정")} label="배송지 주소 설정" hint="실물 카드를 받을 주소" />
         <MenuRow onClick={soon("계정 설정")} label="계정 설정" />
       </ul>
 
